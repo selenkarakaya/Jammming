@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 
-function SearchBar() {
+function SearchBar({ onSearch }) {
   const [active, setActive] = useState(false);
   const [search, setSearch] = useState("");
   const inputRef = useRef(null);
 
   const handleClick = () => {
     if (active && search) {
-      console.log(search);
+      onSearch(search);
       setSearch("");
     } else {
       setActive((prev) => !prev);
@@ -30,6 +30,7 @@ function SearchBar() {
         onChange={handleChange}
         required
       />
+
       <button className="btn" onClick={handleClick}>
         <i className="fas fa-search"></i>
       </button>

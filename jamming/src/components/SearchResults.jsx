@@ -1,14 +1,17 @@
 import React from "react";
 import Track from "./Track";
 
-function SearchResults() {
+function SearchResults({ tracks, addTrackToPlaylist }) {
   return (
     <div>
-      <h1>
-        Displays list of songs from Spotify API based on search query.left side
-        on app page
-      </h1>
-      <Track />
+      <h1 className="text-center">Results</h1>
+      {tracks.map((track, index) => (
+        <Track
+          track={track}
+          key={index}
+          addTrackToPlaylist={addTrackToPlaylist}
+        />
+      ))}
     </div>
   );
 }
