@@ -1,7 +1,19 @@
 import React from "react";
 
-function PlaylistTrack() {
-  return <div>A track inside the playlist, with option to remove.</div>;
+function PlaylistTrack({ playlistTrack }) {
+  return (
+    <>
+      <div className="flex justify-between">
+        <div>
+          <h4>{playlistTrack.name}</h4>
+          <p>
+            {playlistTrack.artist} | {playlistTrack.album}
+          </p>
+        </div>
+        <button>delete</button>
+      </div>
+    </>
+  );
 }
 
 export default PlaylistTrack;

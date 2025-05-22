@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 function SavePlaylistButton() {
   // Ripple effect logic
@@ -30,7 +31,7 @@ function SavePlaylistButton() {
   const handleSave = () => {
     // This is where you'd send your playlist data to Spotify's API
     console.log("Saving playlist to Spotify...");
-
+    toast.success("Playlist saved to Spotify!");
     // Example:
     // fetch("/api/save", {
     //   method: "POST",
