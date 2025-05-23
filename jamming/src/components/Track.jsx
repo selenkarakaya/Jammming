@@ -1,9 +1,7 @@
 import React from "react";
 
 function Track({ track, addTrackToPlaylist }) {
-  const { name, artist, album } = track;
-
-  const handleClick = (e) => {
+  const handleClick = () => {
     addTrackToPlaylist(track);
   };
   return (

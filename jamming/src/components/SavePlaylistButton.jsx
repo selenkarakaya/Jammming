@@ -31,12 +31,12 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
 
   const handleSave = async () => {
     if (!playlistName.trim()) {
-      toast.warn("Lütfen bir playlist adı girin.");
+      toast.warn("Please enter a playlist name.");
       return;
     }
 
     if (playlistTracks.length === 0) {
-      toast.warn("Önce birkaç şarkı ekleyin!");
+      toast.warn("Add some songs first!");
       return;
     }
 
@@ -44,10 +44,10 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
 
     try {
       await Spotify.savePlaylist(playlistName, trackUris);
-      toast.success(`"${playlistName}" Spotify'a kaydedildi!`);
+      toast.success(`"${playlistName}" has been saved to Spotify!`);
     } catch (error) {
-      console.error("Playlist kaydetme hatası:", error);
-      toast.error("Playlist kaydedilemedi!");
+      console.error("Error saving playlist:", error);
+      toast.error("Failed to save playlist!");
     }
   };
 

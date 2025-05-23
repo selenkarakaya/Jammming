@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import { getTokenFromCode } from "./spotifyAuth";
+import { getTokenFromCode } from "../utils/spotifyAuth";
 
 const clientId = "21b64e14c1a9424d92b5cb31a803a393";
 const redirectUri = "http://127.0.0.1:5173/callback";
@@ -14,12 +13,11 @@ function Callback() {
   useEffect(() => {
     async function fetchToken() {
       const code = searchParams.get("code");
-      console.log("Callback'a gelen code:", code);
+      console.log("Code received in callback:", code);
       console.log("Code verifier:", localStorage.getItem("code_verifier"));
 
       if (!code) {
-        toast.error("Kod bulunamadı. Spotify'dan yönlendirme hatası.");
-        navigate("/");
+        navigate("/login");
         return;
       }
 
@@ -35,15 +33,14 @@ function Callback() {
           const expiryTime = new Date().getTime() + tokenData.expires_in * 1000;
           localStorage.setItem("spotify_token_expiry", expiryTime);
 
-          toast.success("Spotify bağlantısı başarılı!");
+          toast.success("Successfully connected to Spotify!");
           navigate("/");
         } else {
-          toast.error("Spotify token alınamadı.");
+          toast.error("Failed to retrieve Spotify token.");
           navigate("/");
         }
       } catch (error) {
-        toast.error("Token alma hatası!");
-        console.error("Token alma hatası:", error);
+        console.error("Error retrieving token:", error);
         navigate("/");
       }
     }
@@ -51,7 +48,7 @@ function Callback() {
     fetchToken();
   }, [navigate, searchParams]);
 
-  return <div>Spotify'a bağlanılıyor...</div>;
+  return <div>Connecting to Spotify...</div>;
 }
 
 export default Callback;

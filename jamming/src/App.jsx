@@ -11,18 +11,19 @@ import Spotify from "./utils/Spotify";
 import SearchBar from "./components/SearchBar";
 import SearchResults from "./components/SearchResults";
 import Playlist from "./components/Playlist";
-import Callback from "./utils/Callback";
+import Callback from "./components/Callback";
 import Login from "./components/Login";
 import "./App.css";
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [playlistTracks, setPlaylistTracks] = useState([]);
+
   const [token, setToken] = useState(
     localStorage.getItem("spotify_access_token")
   );
 
-  // Callback'den dönerken token değişmiş olabilir, bu yüzden dinle
+  // Listen for token changes when returning from callback
   useEffect(() => {
     const storedToken = localStorage.getItem("spotify_access_token");
     if (storedToken !== token) {
@@ -35,16 +36,16 @@ function App() {
       const results = await Spotify.search(term);
       setSearchResults(results);
     } catch (error) {
-      toast.error("Spotify araması başarısız!");
+      toast.error("Spotify search failed!");
       console.error(error);
     }
   }
 
   const addTrackToPlaylist = (track) => {
-    console.log(`bu track componentinden geliyor ${JSON.stringify(track)}`);
-    // Aynı track daha önce eklenmişse tekrar ekleme
+    console.log(`Track received from component: ${JSON.stringify(track)}`);
+    // Avoid adding duplicate tracks
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
-      console.log("bu ekli zaten");
+      console.log("This track is already added.");
     } else {
       setPlaylistTracks((prev) => [...prev, track]);
     }
@@ -61,7 +62,6 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/callback" element={<Callback />} />
-
         <Route
           path="/"
           element={

@@ -1,4 +1,4 @@
-import { generateRandomString, sha256, base64UrlEncode } from "./spotifyAuth"; // varsa
+import { generateRandomString, sha256, base64UrlEncode } from "./spotifyAuth";
 
 const clientId = "21b64e14c1a9424d92b5cb31a803a393";
 const redirectUri = "http://127.0.0.1:5173/callback";
@@ -19,10 +19,11 @@ const Spotify = {
       localStorage.setItem("spotify_refresh_token", refresh_token);
     }
 
-    // Token süresi dolunca otomatik temizlemek veya yenilemek için timestamp sakla
+    // Store expiry timestamp to auto-clear or refresh token when it expires
     const expiryTime = new Date().getTime() + expires_in * 1000;
     localStorage.setItem("spotify_token_expiry", expiryTime);
   },
+
   async redirectToSpotify() {
     const codeVerifier = generateRandomString(128);
     localStorage.setItem("code_verifier", codeVerifier);
@@ -38,10 +39,12 @@ const Spotify = {
 
     window.location = authUrl;
   },
+
   async refreshAccessToken() {
     const refresh_token = this.getRefreshToken();
+
     if (!refresh_token) {
-      throw new Error("Refresh token yok");
+      throw new Error("No refresh token found.");
     }
 
     const params = new URLSearchParams({
@@ -64,11 +67,11 @@ const Spotify = {
       this.setTokens({
         access_token: data.access_token,
         expires_in: data.expires_in,
-        // refresh_token genellikle gelmez, eskisini koru
+        // Refresh token usually not returned again, keep the existing one
       });
       return data.access_token;
     } else {
-      throw new Error("Token yenileme başarısız");
+      throw new Error("Token refresh failed.");
     }
   },
 
@@ -78,11 +81,11 @@ const Spotify = {
     const now = new Date().getTime();
 
     if (!token) {
-      throw new Error("Access token yok");
+      throw new Error("No access token available.");
     }
 
     if (expiry && now > expiry) {
-      // Token süresi dolmuş, yenile
+      // Token has expired, refresh it
       return await this.refreshAccessToken();
     }
 
@@ -99,8 +102,8 @@ const Spotify = {
     const response = await fetch(endpoint, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const json = await response.json();
 
+    const json = await response.json();
     if (!json.tracks) return [];
 
     return json.tracks.items.map((track) => ({
@@ -118,14 +121,14 @@ const Spotify = {
     const token = await this.ensureAccessToken();
     const headers = { Authorization: `Bearer ${token}` };
 
-    // Kullanıcı ID'sini al
+    // Get the user ID
     const userResponse = await fetch("https://api.spotify.com/v1/me", {
       headers,
     });
     const userData = await userResponse.json();
     const userId = userData.id;
 
-    // Playlist oluştur
+    // Create a new playlist
     const playlistResponse = await fetch(
       `https://api.spotify.com/v1/users/${userId}/playlists`,
       {
@@ -140,7 +143,7 @@ const Spotify = {
     const playlistData = await playlistResponse.json();
     const playlistId = playlistData.id;
 
-    // Şarkıları ekle
+    // Add tracks to the playlist
     await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
       method: "POST",
       headers: {

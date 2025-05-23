@@ -4,12 +4,12 @@ import Spotify from "../utils/Spotify";
 function Login() {
   return (
     <div style={{ textAlign: "center", marginTop: 50 }}>
-      <h2>Spotify ile giriş yapınız</h2>
+      <h2>Log in with Spotify</h2>
       <button
         onClick={Spotify.redirectToSpotify}
         className="savePlaylistButton"
       >
-        Spotify ile Giriş Yap 2
+        Log In with Spotify
       </button>
     </div>
   );
