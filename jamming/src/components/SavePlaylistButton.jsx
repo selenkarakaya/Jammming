@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import Spotify from "../utils/Spotify";
 
-function SavePlaylistButton() {
+function SavePlaylistButton({ playlistTracks, playlistName }) {
   // Ripple effect logic
   const [ripples, setRipples] = useState([]);
 
@@ -28,18 +29,26 @@ function SavePlaylistButton() {
     handleSave();
   };
 
-  const handleSave = () => {
-    // This is where you'd send your playlist data to Spotify's API
-    console.log("Saving playlist to Spotify...");
-    toast.success("Playlist saved to Spotify!");
-    // Example:
-    // fetch("/api/save", {
-    //   method: "POST",
-    //   body: JSON.stringify(selectedTracks)
-    // })
+  const handleSave = async () => {
+    if (!playlistName.trim()) {
+      toast.warn("Lütfen bir playlist adı girin.");
+      return;
+    }
 
-    // Optionally, show a toast or notification
-    // toast.success("Playlist saved to Spotify!");
+    if (playlistTracks.length === 0) {
+      toast.warn("Önce birkaç şarkı ekleyin!");
+      return;
+    }
+
+    const trackUris = playlistTracks.map((track) => track.uri);
+
+    try {
+      await Spotify.savePlaylist(playlistName, trackUris);
+      toast.success(`"${playlistName}" Spotify'a kaydedildi!`);
+    } catch (error) {
+      console.error("Playlist kaydetme hatası:", error);
+      toast.error("Playlist kaydedilemedi!");
+    }
   };
 
   return (

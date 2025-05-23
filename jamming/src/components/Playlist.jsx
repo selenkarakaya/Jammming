@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import PlaylistTrack from "./PlaylistTrack";
 import SavePlaylistButton from "./SavePlaylistButton";
 
-function Playlist({ playlistTracks }) {
+function Playlist({ playlistTracks, removeTrackFromPlaylist }) {
+  const [playlistName, setPlaylistName] = useState("My Awesome Playlist");
   return (
     <div>
-      <h1>Displays selected songs to be saved. right side on page</h1>
-      {playlistTracks.map((playlistTrack, index) => (
-        <PlaylistTrack playlistTrack={playlistTrack} key={playlistTrack} />
+      <input
+        type="text"
+        value={playlistName}
+        placeholder="playlist name"
+        onChange={(e) => setPlaylistName(e.target.value)}
+      />
+      {playlistTracks.map((playlistTrack) => (
+        <PlaylistTrack
+          playlistTrack={playlistTrack}
+          key={playlistTrack.id}
+          onRemove={removeTrackFromPlaylist}
+        />
       ))}
 
-      <SavePlaylistButton />
+      <SavePlaylistButton
+        playlistTracks={playlistTracks}
+        playlistName={playlistName}
+      />
     </div>
   );
 }
