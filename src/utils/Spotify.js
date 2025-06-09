@@ -1,11 +1,17 @@
 import { generateRandomString, sha256, base64UrlEncode } from "./spotifyAuth";
+import { toast } from "react-toastify";
 
 const clientId = "21b64e14c1a9424d92b5cb31a803a393";
+// const redirectUri =
+//   window.location.hostname === "localhost"
+//     ? "http://127.0.0.1:5173/callback"
+//     : "https://spotifyapijamming.netlify.app/callback";
+const scope = "playlist-modify-public playlist-modify-private";
 const redirectUri =
-  window.location.hostname === "localhost"
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:5173/callback"
     : "https://spotifyapijamming.netlify.app/callback";
-const scope = "playlist-modify-public playlist-modify-private";
 
 const Spotify = {
   getAccessToken() {
