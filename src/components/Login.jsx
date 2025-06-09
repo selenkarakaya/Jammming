@@ -3,11 +3,11 @@ import Spotify from "../utils/Spotify";
 
 function Login() {
   return (
-    <div style={{ textAlign: "center", marginTop: 50 }}>
-      <h2>Log in with Spotify</h2>
+    <div className="flex justify-center items-center h-screen">
       <button
         onClick={Spotify.redirectToSpotify}
         className="savePlaylistButton"
+        aria-label="Log in to your Spotify account"
       >
         Log In with Spotify
       </button>
