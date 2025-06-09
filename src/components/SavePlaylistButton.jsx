@@ -48,7 +48,7 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
     const trackUris = playlistTracks.map((track) => track.uri);
 
     try {
-      // await Spotify.savePlaylist(playlistName, trackUris);
+      await Spotify.savePlaylist(playlistName, trackUris);
       setIsSaving(false); // Stop loading when done
       toast.success(`"${playlistName}" has been saved to Spotify!`);
     } catch (error) {

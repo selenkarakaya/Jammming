@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function PlaylistTracks({ track }) {
+function UserPlaylistTracks({ track }) {
   return (
     <li key={track.id} style={{ marginBottom: "15px" }}>
       <strong>{track.name}</strong> by {track.artist}
@@ -25,4 +25,4 @@ function PlaylistTracks({ track }) {
   );
 }
 
-export default PlaylistTracks;
+export default UserPlaylistTracks;

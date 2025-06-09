@@ -1,7 +1,7 @@
 import React from "react";
 import { IoRemoveCircleOutline } from "react-icons/io5";
 
-function PlaylistTrack({ playlistTrack, onRemove }) {
+function NewPlaylistTrack({ playlistTrack, onRemove }) {
   return (
     <>
       <div className="flex justify-between border-b-4 border-b-indigo-100 mb-4 text-amber-50">
@@ -24,4 +24,4 @@ function PlaylistTrack({ playlistTrack, onRemove }) {
   );
 }
 
-export default PlaylistTrack;
+export default NewPlaylistTrack;

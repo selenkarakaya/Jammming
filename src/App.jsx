@@ -10,7 +10,7 @@ import {
 import Spotify from "./utils/Spotify";
 import SearchBar from "./components/SearchBar";
 import SearchResults from "./components/SearchResults";
-import Playlist from "./components/Playlist";
+import NewPlaylist from "./components/NewPlaylist";
 import Callback from "./components/Callback";
 import Login from "./components/Login";
 import "./App.css";
@@ -82,7 +82,7 @@ function App() {
                     tracks={searchResults}
                     addTrackToPlaylist={addTrackToPlaylist}
                   />
-                  <Playlist
+                  <NewPlaylist
                     playlistTracks={playlistTracks}
                     removeTrackFromPlaylist={removeTrackFromPlaylist}
                     tempMessage={tempMessage}

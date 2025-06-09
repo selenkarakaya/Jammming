@@ -2,7 +2,7 @@ import React from "react";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { AiOutlineSpotify } from "react-icons/ai";
 
-function Track({ track, addTrackToPlaylist }) {
+function SearchResultsTrack({ track, addTrackToPlaylist }) {
   const handleClick = () => {
     addTrackToPlaylist(track);
   };
@@ -42,4 +42,4 @@ function Track({ track, addTrackToPlaylist }) {
   );
 }
 
-export default Track;
+export default SearchResultsTrack;

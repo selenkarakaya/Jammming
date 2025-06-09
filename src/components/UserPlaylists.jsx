@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../utils/Spotify";
-import PlaylistTracks from "./PlaylistTracks";
-function PlaylistList() {
+import UserPlaylistTracks from "./UserPlaylistTracks";
+function UserPlaylists() {
   const [playlists, setPlaylists] = useState([]);
   const [error, setError] = useState(null);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
@@ -93,7 +93,7 @@ function PlaylistList() {
             ) : (
               <ul>
                 {tracks.map((track) => (
-                  <PlaylistTracks key={track.id} track={track} />
+                  <UserPlaylistTracks key={track.id} track={track} />
                 ))}
               </ul>
             )}
@@ -106,7 +106,7 @@ function PlaylistList() {
 }
 
 //   ))}
-export default PlaylistList;
+export default UserPlaylists;
 
 /*
 Since getUserPlaylists is asynchronous, you can't make the useEffect callback itself async, because React doesn't expect it to return a Promise.

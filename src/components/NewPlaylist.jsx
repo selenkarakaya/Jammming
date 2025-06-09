@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import PlaylistTrack from "./PlaylistTrack";
+import NewPlaylistTrack from "./NewPlaylistTrack";
 import SavePlaylistButton from "./SavePlaylistButton";
-import PlaylistList from "./PlaylistList";
+import UserPlaylists from "./UserPlaylists";
 
-function Playlist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
+function NewPlaylist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
   const [playlistName, setPlaylistName] = useState("");
 
   return (
@@ -41,7 +41,7 @@ function Playlist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
       <ul role="list" aria-label="Playlist tracks" className="space-y-2 mb-4">
         {playlistTracks.map((playlistTrack) => (
           <li key={playlistTrack.id}>
-            <PlaylistTrack
+            <NewPlaylistTrack
               playlistTrack={playlistTrack}
               onRemove={removeTrackFromPlaylist}
             />
@@ -62,10 +62,9 @@ function Playlist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
         </div>
       )}
 
-      <PlaylistList />
-      {/* {selectedPlaylistId && <PlaylistTracks playlistId={selectedPlaylistId} />} */}
+      <UserPlaylists />
     </section>
   );
 }
 
-export default Playlist;
+export default NewPlaylist;

@@ -1,12 +1,12 @@
 import React from "react";
-import Track from "./Track";
+import SearchResultsTrack from "./SearchResultsTrack";
 
 function SearchResults({ tracks, addTrackToPlaylist }) {
   return (
     <div className="bg-white/15 p-4 rounded-xl shadow-md">
       <h1 className="text-center text-lg font-semibold mb-2">Results</h1>
       {tracks.map((track, index) => (
-        <Track
+        <SearchResultsTrack
           track={track}
           key={index}
           addTrackToPlaylist={addTrackToPlaylist}
