@@ -4,7 +4,7 @@ Jammming is a React web application that allows users to search songs via the Sp
 
 ## 🔗 Live Demo
 
-[Click here to try Jammming live](https://spotifyapijamming.netlify.app)
+[Jammming](https://spotifyapijamming.netlify.app)
 
 ---
 
