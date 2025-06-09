@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PlaylistTrack from "./PlaylistTrack";
 import SavePlaylistButton from "./SavePlaylistButton";
+import PlaylistList from "./PlaylistList";
 
 function Playlist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
   const [playlistName, setPlaylistName] = useState("");
@@ -60,6 +61,9 @@ function Playlist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
           </div>
         </div>
       )}
+
+      <PlaylistList />
+      {/* {selectedPlaylistId && <PlaylistTracks playlistId={selectedPlaylistId} />} */}
     </section>
   );
 }
