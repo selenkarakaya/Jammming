@@ -39,7 +39,10 @@ function Callback() {
           localStorage.setItem("spotify_token_expiry", expiryTime);
 
           toast.success("Successfully connected to Spotify!");
-          navigate("/");
+          toast.success("Successfully connected to Spotify!");
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 300);
         } else {
           toast.error("Failed to retrieve Spotify token.");
           navigate("/");
