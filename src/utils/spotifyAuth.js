@@ -48,7 +48,7 @@ export async function getTokenFromCode(code, clientId, redirectUri) {
   if (!response.ok) {
     const errorText = await response.text();
     console.error("Spotify token error:", errorText);
-    localStorage.clear();
+    //localStorage.clear();
     throw new Error("Token request failed");
   }
 
