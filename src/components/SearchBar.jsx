@@ -1,3 +1,5 @@
+import React, { useState, useRef } from "react";
+
 function SearchBar({ onSearch }) {
   const [active, setActive] = useState(false);
   const [search, setSearch] = useState("");
@@ -5,13 +7,23 @@ function SearchBar({ onSearch }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (search) {
-      onSearch(search);
-      setSearch("");
-    } else {
-      setActive((prev) => !prev);
+
+    if (!active) {
+      // If input is not active, open it and focus. Don't search yet.
+      setActive(true);
       inputRef.current?.focus();
+      return;
     }
+
+    // If input is active but empty, prevent submission (required will show browser validation)
+    if (active && search.trim() === "") {
+      // Optionally show a message here
+      return;
+    }
+
+    // If input is active and has value, perform the search
+    onSearch(search);
+    setSearch("");
   };
 
   const handleChange = (e) => {
@@ -28,17 +40,19 @@ function SearchBar({ onSearch }) {
       <label htmlFor="search-input" className="sr-only">
         Search
       </label>
-      <input
-        id="search-input"
-        type="text"
-        className="input"
-        placeholder="Search..."
-        ref={inputRef}
-        value={search}
-        onChange={handleChange}
-        required
-        aria-label="Search input"
-      />
+      {active && (
+        <input
+          id="search-input"
+          type="text"
+          className="input"
+          placeholder="Search..."
+          ref={inputRef}
+          value={search}
+          onChange={handleChange}
+          required={active} // required only applies when input is visible
+          aria-label="Search input"
+        />
+      )}
 
       <button className="btn" type="submit" aria-label="Submit search">
         <i className="fas fa-search" aria-hidden="true"></i>
@@ -46,3 +60,5 @@ function SearchBar({ onSearch }) {
     </form>
   );
 }
+
+export default SearchBar;
