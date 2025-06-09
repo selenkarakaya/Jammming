@@ -4,8 +4,6 @@ import { toast } from "react-toastify";
 import { getTokenFromCode } from "../utils/spotifyAuth";
 
 const clientId = "21b64e14c1a9424d92b5cb31a803a393";
-//const redirectUri = "http://127.0.0.1:5173/callback";
-
 const redirectUri =
   window.location.hostname === "localhost"
     ? "http://127.0.0.1:5173/callback"
@@ -37,8 +35,6 @@ function Callback() {
           );
           const expiryTime = new Date().getTime() + tokenData.expires_in * 1000;
           localStorage.setItem("spotify_token_expiry", expiryTime);
-
-          toast.success("Successfully connected to Spotify!");
           toast.success("Successfully connected to Spotify!");
           setTimeout(() => {
             window.location.href = "/";

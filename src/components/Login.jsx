@@ -1,7 +1,16 @@
 import React from "react";
 import Spotify from "../utils/Spotify";
+import { toast } from "react-toastify";
 
 function Login() {
+  useEffect(() => {
+    const logoutReason = localStorage.getItem("logout_reason");
+    if (logoutReason) {
+      toast.info(logoutReason);
+      localStorage.removeItem("logout_reason");
+    }
+  }, []);
+
   return (
     <div className="flex justify-center items-center h-screen">
       <button

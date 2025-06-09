@@ -45,7 +45,7 @@ const Spotify = {
 
   async refreshAccessToken() {
     const refresh_token = this.getRefreshToken();
-
+    console.log("Using refresh_token:", refresh_token);
     if (!refresh_token) {
       throw new Error("No refresh token found.");
     }
@@ -74,6 +74,14 @@ const Spotify = {
       });
       return data.access_token;
     } else {
+      localStorage.removeItem("spotify_access_token");
+      localStorage.removeItem("spotify_refresh_token");
+      localStorage.removeItem("spotify_token_expiry");
+      localStorage.setItem(
+        "logout_reason",
+        "Session expired. Please log in again."
+      );
+      window.location.href = "/login";
       throw new Error("Token refresh failed.");
     }
   },
