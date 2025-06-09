@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getTokenFromCode } from "../utils/spotifyAuth";
+import LoadingScreen from "./LoadingScreen";
 
 const clientId = "21b64e14c1a9424d92b5cb31a803a393";
 // const redirectUri =
@@ -58,7 +59,7 @@ function Callback() {
     fetchToken();
   }, [navigate, searchParams]);
 
-  return <div>Connecting to Spotify...</div>;
+  return <LoadingScreen />;
 }
 
 export default Callback;
