@@ -32,7 +32,7 @@ function App() {
     }
   }, []);
 
-  const showTempMessage = (msg, duration = 3000) => {
+  const showTempMessage = (msg, duration = 2000) => {
     setTempMessage(msg);
     setTimeout(() => {
       setTempMessage(null);
