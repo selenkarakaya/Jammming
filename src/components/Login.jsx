@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Spotify from "../utils/Spotify";
 import { toast } from "react-toastify";
 
