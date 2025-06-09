@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Spotify from "../utils/Spotify";
-
+import LoadingScreen from "./LoadingScreen";
 function SavePlaylistButton({ playlistTracks, playlistName }) {
   // Ripple effect logic
   const [ripples, setRipples] = useState([]);
@@ -48,7 +48,7 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
     const trackUris = playlistTracks.map((track) => track.uri);
 
     try {
-      await Spotify.savePlaylist(playlistName, trackUris);
+      // await Spotify.savePlaylist(playlistName, trackUris);
       setIsSaving(false); // Stop loading when done
       toast.success(`"${playlistName}" has been saved to Spotify!`);
     } catch (error) {
@@ -57,6 +57,10 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
       toast.error("Failed to save playlist!");
     }
   };
+
+  if (isSaving) {
+    return <LoadingScreen />;
+  }
 
   return (
     <>
