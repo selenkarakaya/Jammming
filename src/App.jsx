@@ -50,7 +50,6 @@ function App() {
   }
 
   const addTrackToPlaylist = (track) => {
-    console.log(`Track received from component: ${JSON.stringify(track)}`);
     // Avoid adding duplicate tracks
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
       showTempMessage("This track is already added.");
