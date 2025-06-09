@@ -20,7 +20,14 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <div className={`search ${active ? "active" : ""}`}>
+    <form
+      className={`search ${active ? "active" : ""}`}
+      role="search"
+      aria-label="Site search"
+    >
+      <label htmlFor="search-input" className="sr-only">
+        Search
+      </label>
       <input
         type="text"
         className="input"
@@ -29,12 +36,18 @@ function SearchBar({ onSearch }) {
         value={search}
         onChange={handleChange}
         required
+        aria-label="Search input"
       />
 
-      <button className="btn" onClick={handleClick}>
-        <i className="fas fa-search"></i>
+      <button
+        className="btn"
+        type="submit"
+        aria-label="Submit search"
+        onClick={handleClick}
+      >
+        <i className="fas fa-search" aria-hidden="true"></i>
       </button>
-    </div>
+    </form>
   );
 }
 
