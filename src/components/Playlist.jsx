@@ -37,7 +37,7 @@ function Playlist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
         </div>
       </form>
 
-      <ul role="list" aria-label="Playlist tracks" className="space-y-2">
+      <ul role="list" aria-label="Playlist tracks" className="space-y-2 mb-4">
         {playlistTracks.map((playlistTrack) => (
           <li key={playlistTrack.id}>
             <PlaylistTrack
@@ -48,12 +48,11 @@ function Playlist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
         ))}
       </ul>
 
-      <div className="mt-4">
-        <SavePlaylistButton
-          playlistTracks={playlistTracks}
-          playlistName={playlistName}
-        />
-      </div>
+      <SavePlaylistButton
+        playlistTracks={playlistTracks}
+        playlistName={playlistName}
+      />
+
       {tempMessage && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
           <div className="bg-black/80 text-white px-6 py-3 rounded-xl shadow-lg text-lg animate-fadeInOut">

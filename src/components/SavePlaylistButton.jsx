@@ -24,7 +24,6 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
     setTimeout(() => {
       setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
     }, 600);
-
     // 🎵 Trigger the playlist save to Spotify
     handleSave();
   };
@@ -52,8 +51,12 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
   };
 
   return (
-    <div>
-      <button className="savePlaylistButton" onClick={handleClick}>
+    <div className="flex justify-center">
+      <button
+        className="savePlaylistButton"
+        onClick={handleClick}
+        aria-label="Add playlist to spotify"
+      >
         SAVE TO SPOTIFY
         {ripples.map((ripple) => (
           <span
