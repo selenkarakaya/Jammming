@@ -1,12 +1,13 @@
 import React from "react";
+import { IoRemoveCircleOutline } from "react-icons/io5";
 
 function PlaylistTrack({ playlistTrack, onRemove }) {
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between border-b-4 border-b-indigo-100 mb-4 text-amber-50">
         <div>
-          <h4>{playlistTrack.name}</h4>
-          <p>
+          <h4 className="mb-1">{playlistTrack.name}</h4>
+          <p className="text-sm mb-1">
             {playlistTrack.artist} | {playlistTrack.album}
           </p>
         </div>
@@ -14,8 +15,9 @@ function PlaylistTrack({ playlistTrack, onRemove }) {
           onClick={() => {
             onRemove(playlistTrack);
           }}
+          aria-label={`Remove ${playlistTrack.name} from playlist`}
         >
-          delete
+          <IoRemoveCircleOutline />
         </button>
       </div>
     </>

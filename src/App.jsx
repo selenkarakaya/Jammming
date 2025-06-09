@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,6 +16,7 @@ import "./App.css";
 function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [tempMessage, setTempMessage] = useState(null);
 
   const [token, setToken] = useState(
     localStorage.getItem("spotify_access_token")
@@ -31,12 +30,19 @@ function App() {
     }
   }, []);
 
+  const showTempMessage = (msg, duration = 3000) => {
+    setTempMessage(msg);
+    setTimeout(() => {
+      setTempMessage(null);
+    }, duration);
+  };
+
   async function handleSearch(term) {
     try {
       const results = await Spotify.search(term);
       setSearchResults(results);
     } catch (error) {
-      toast.error("Spotify search failed!");
+      showTempMessage("Spotify search failed!");
       console.error(error);
     }
   }
@@ -45,7 +51,7 @@ function App() {
     console.log(`Track received from component: ${JSON.stringify(track)}`);
     // Avoid adding duplicate tracks
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
-      console.log("This track is already added.");
+      showTempMessage("This track is already added.");
     } else {
       setPlaylistTracks((prev) => [...prev, track]);
     }
@@ -78,6 +84,7 @@ function App() {
                   <Playlist
                     playlistTracks={playlistTracks}
                     removeTrackFromPlaylist={removeTrackFromPlaylist}
+                    tempMessage={tempMessage}
                   />
                 </div>
               </div>
@@ -87,7 +94,6 @@ function App() {
           }
         />
       </Routes>
-      <ToastContainer />
     </Router>
   );
 }

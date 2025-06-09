@@ -53,7 +53,6 @@ function SavePlaylistButton({ playlistTracks, playlistName }) {
 
   return (
     <div>
-      Button to save/export playlist to Spotify.
       <button className="savePlaylistButton" onClick={handleClick}>
         SAVE TO SPOTIFY
         {ripples.map((ripple) => (
