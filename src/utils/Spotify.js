@@ -13,6 +13,8 @@ const redirectUri =
     ? "http://127.0.0.1:5173/callback"
     : "https://spotifyapijamming.netlify.app/callback";
 
+let userId = null;
+
 const Spotify = {
   getAccessToken() {
     return localStorage.getItem("spotify_access_token");
@@ -134,6 +136,28 @@ const Spotify = {
     }));
   },
 
+  async getCurrentUserId() {
+    try {
+      const token = await this.ensureAccessToken();
+
+      const userResponse = await fetch("https://api.spotify.com/v1/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const userData = await userResponse.json();
+      const userId = userData.id;
+
+      return userId;
+    } catch (error) {
+      console.error("Error in getCurrentUserId:", error);
+      throw error;
+    }
+  },
+
   async savePlaylist(name, trackUris) {
     if (!name || !trackUris.length) return;
 
@@ -141,11 +165,7 @@ const Spotify = {
     const headers = { Authorization: `Bearer ${token}` };
 
     // Get the user ID
-    const userResponse = await fetch("https://api.spotify.com/v1/me", {
-      headers,
-    });
-    const userData = await userResponse.json();
-    const userId = userData.id;
+    const userId = await this.getCurrentUserId();
 
     // Create a new playlist
     const playlistResponse = await fetch(
@@ -172,6 +192,67 @@ const Spotify = {
       body: JSON.stringify({ uris: trackUris }),
     });
   },
+
+  async getUserPlaylists() {
+    try {
+      const token = await this.ensureAccessToken();
+      const user_id = await this.getCurrentUserId();
+
+      const allPlaylistResponse = await fetch(
+        `https://api.spotify.com/v1/users/${user_id}/playlists`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!allPlaylistResponse.ok) {
+        throw new Error("Failed to get playlists");
+      }
+
+      const allPlaylist = await allPlaylistResponse.json();
+      return allPlaylist.items.map((playlist) => ({
+        playlistId: playlist.id,
+        name: playlist.name,
+      }));
+    } catch (error) {
+      console.error("Error fetching user playlists:", error);
+      // You can add a toast notification or another method here to inform the user if you want
+      return []; // Return an empty array in case of an error
+    }
+  },
+  async getPlaylistTracks(playlistId) {
+    try {
+      const token = await this.ensureAccessToken();
+      const user_id = await this.getCurrentUserId();
+
+      const playlistTracksResponse = await fetch(
+        `https://api.spotify.com/v1/users/${user_id}/playlists/${playlistId}/tracks`,
+        { method: "GET", headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!playlistTracksResponse.ok) {
+        throw new Error("Failed to get playlist's tracks");
+      }
+      const playlistTracks = await playlistTracksResponse.json();
+      return playlistTracks.items.map((item) => ({
+        id: item.track.id,
+        name: item.track.name,
+        artist: item.track.artists[0].name,
+        album: item.track.album.name,
+        uri: item.track.uri,
+        preview_url: item.track.preview_url,
+        external_urls: item.track.external_urls,
+      }));
+    } catch (error) {
+      console.error("Error fetching playlist tracks", error);
+      return [];
+    }
+  },
 };
 
 export default Spotify;
+
+/*
+Methods defined within the same object use this to call each other 
+because this refers to the object that the current method belongs to (in this case, the Spotify object).
+*/
