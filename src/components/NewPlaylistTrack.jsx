@@ -16,6 +16,7 @@ function NewPlaylistTrack({ playlistTrack, onRemove }) {
             onRemove(playlistTrack);
           }}
           aria-label={`Remove ${playlistTrack.name} from playlist`}
+          className="text-2xl"
         >
           <IoRemoveCircleOutline />
         </button>

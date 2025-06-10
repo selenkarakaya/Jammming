@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { IoRemoveCircleOutline } from "react-icons/io5";
+import { AiOutlineSpotify } from "react-icons/ai";
 
 function UserPlaylistTracks({ track, handleRemoveTrack }) {
   return (
@@ -20,7 +22,19 @@ function UserPlaylistTracks({ track, handleRemoveTrack }) {
       >
         Open in Spotify
       </a>
-      <button onClick={() => handleRemoveTrack(track.id)}>Sil</button>
+      <a
+        href={track.external_urls?.spotify}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <AiOutlineSpotify className="text-2xl text-green-900" />
+      </a>
+      <button
+        onClick={() => handleRemoveTrack(track.id)}
+        aria-label={`Remove ${track.name} from playlist`}
+      >
+        <IoRemoveCircleOutline className="text-2xl" />
+      </button>
       <hr />
     </li>
   );
