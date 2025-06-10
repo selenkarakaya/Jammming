@@ -354,8 +354,6 @@ const Spotify = {
       if (!response.ok) {
         throw new Error(`Failed to remove track: ${response.statusText}`);
       }
-
-      console.log("Track successfully removed from playlist.");
     } catch (error) {
       console.error("Error removing track from playlist:", error);
     }
@@ -365,6 +363,6 @@ const Spotify = {
 export default Spotify;
 
 /*
-Methods defined within the same object use this to call each other 
+Methods defined within the same object use *this* to call each other 
 because this refers to the object that the current method belongs to (in this case, the Spotify object).
 */
