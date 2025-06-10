@@ -5,11 +5,6 @@ import { getTokenFromCode } from "../utils/spotifyAuth";
 import LoadingScreen from "./LoadingScreen";
 
 const clientId = "21b64e14c1a9424d92b5cb31a803a393";
-// const redirectUri =
-//   window.location.hostname === "localhost"
-//     ? "http://127.0.0.1:5173/callback"
-//     : "https://spotifyapijamming.netlify.app/callback";
-
 const redirectUri =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
@@ -45,7 +40,7 @@ function Callback() {
           toast.success("Successfully connected to Spotify!");
           setTimeout(() => {
             window.location.href = "/";
-          }, 300);
+          }, 100);
         } else {
           toast.error("Failed to retrieve Spotify token.");
           navigate("/");

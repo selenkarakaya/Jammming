@@ -8,7 +8,7 @@ function SearchResults({ tracks, addTrackToPlaylist }) {
       {tracks.map((track, index) => (
         <SearchResultsTrack
           track={track}
-          key={index}
+          key={track.id}
           addTrackToPlaylist={addTrackToPlaylist}
         />
       ))}

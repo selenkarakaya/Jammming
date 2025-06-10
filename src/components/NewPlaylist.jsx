@@ -25,25 +25,23 @@ function NewPlaylist({
         Playlist Editor
       </h2>
 
-      <form>
-        <div className="mb-4">
-          <label
-            htmlFor="playlist-name"
-            className="block text-sm font-medium text-white sr-only"
-          >
-            Playlist Name
-          </label>
-          <input
-            id="playlist-name"
-            type="text"
-            value={playlistName}
-            placeholder="Enter playlist name"
-            aria-label="Playlist name"
-            onChange={(e) => setPlaylistName(e.target.value)}
-            className="mt-1 p-2 w-full rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </form>
+      <div className="mb-4">
+        <label
+          htmlFor="playlist-name"
+          className="block text-sm font-medium text-white sr-only"
+        >
+          Playlist Name
+        </label>
+        <input
+          id="playlist-name"
+          type="text"
+          value={playlistName}
+          placeholder="Enter playlist name"
+          aria-label="Playlist name"
+          onChange={(e) => setPlaylistName(e.target.value)}
+          className="mt-1 p-2 w-full rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
       <ul role="list" aria-label="Playlist tracks" className="space-y-2 mb-4">
         {playlistTracks.map((playlistTrack) => (

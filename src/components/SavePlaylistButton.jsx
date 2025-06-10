@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import Spotify from "../utils/Spotify";
 import LoadingScreen from "./LoadingScreen";
+import RippleButton from "./RippleButton";
+import { savePlaylistToSpotify } from "../utils/savePlaylistToSpotify";
+
 function SavePlaylistButton({
   playlistTracks,
   playlistName,
@@ -11,94 +13,35 @@ function SavePlaylistButton({
   onUpdate,
 }) {
   const [isSaving, setIsSaving] = useState(false);
-  const [ripples, setRipples] = useState([]);
 
-  const handleClick = (e) => {
-    const button = e.currentTarget;
-    const rect = button.getBoundingClientRect();
-
-    const xInside = e.clientX - rect.left;
-    const yInside = e.clientY - rect.top;
-
-    const newRipple = {
-      id: Date.now(),
-      x: xInside,
-      y: yInside,
-    };
-
-    setRipples((prev) => [...prev, newRipple]);
-
-    setTimeout(() => {
-      setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
-    }, 600);
-    // 🎵 Trigger the playlist save to Spotify
-    handleSave();
-  };
-
-  const handleSave = async () => {
-    setIsSaving(true); // Start loading
-
-    if (!playlistName.trim()) {
-      toast.warn("Please enter a playlist name.");
-      setIsSaving(false);
-      return;
-    }
-
-    if (playlistTracks.length === 0) {
-      toast.warn("Add some songs first!");
-      setIsSaving(false);
-      return;
-    }
-
-    const trackUris = playlistTracks.map((track) => track.uri);
-
+  const handleClick = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
     try {
-      await Spotify.savePlaylist(playlistName, trackUris, playlistId);
-
-      const updatedPlaylist = playlistId
-        ? await Spotify.getPlaylistTracks(playlistId) // sadece güncellenen playlist
-        : null;
-
-      setIsSaving(false); // Stop loading when done
-      toast.success(`"${playlistName}" has been saved to Spotify!`);
-
-      onReset();
-      onSave(await Spotify.getUserPlaylists());
-
-      if (playlistId && updatedPlaylist) {
-        onUpdate(updatedPlaylist, playlistName);
-      } else {
-        onSave(await Spotify.getUserPlaylists());
-      }
-    } catch (error) {
-      setIsSaving(false); // Stop loading on error
-      console.error("Error saving playlist:", error);
-      toast.error("Failed to save playlist!");
+      await savePlaylistToSpotify({
+        name: playlistName,
+        tracks: playlistTracks,
+        playlistId,
+        onReset,
+        onSave,
+        onUpdate,
+      });
+      toast.success(`"${playlistName}" saved to Spotify!`);
+    } catch (err) {
+      toast.error(err.message || "Failed to save playlist!");
+      console.error(err);
+    } finally {
+      setIsSaving(false);
     }
   };
-
-  if (isSaving) {
-    return <LoadingScreen />;
-  }
 
   return (
     <>
       {isSaving && <LoadingScreen />}
       <div className="flex justify-center">
-        <button
-          className="savePlaylistButton"
-          onClick={handleClick}
-          aria-label="Add playlist to spotify"
-        >
+        <RippleButton className="savePlaylistButton" onClick={handleClick}>
           SAVE TO SPOTIFY
-          {ripples.map((ripple) => (
-            <span
-              key={ripple.id}
-              className="ripple"
-              style={{ top: ripple.y, left: ripple.x }}
-            ></span>
-          ))}
-        </button>
+        </RippleButton>
       </div>
     </>
   );

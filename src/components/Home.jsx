@@ -4,35 +4,48 @@ import SearchBar from "./SearchBar";
 import SearchResults from "./SearchResults";
 import NewPlaylist from "./NewPlaylist";
 import UserPlaylists from "./UserPlaylists";
+//States and methods related to playlist management are inside the hook.
+import usePlaylistManager from "../hooks/usePlaylistManager";
+import Login from "./Login";
 
 function Home() {
+  const {
+    playlistTracks,
+    playlistName,
+    playlistId,
+    setPlaylistName,
+    setPlaylistId,
+    setPlaylistTracks,
+    addTrack,
+    removeTrack,
+    reset,
+  } = usePlaylistManager();
+
   const [searchResults, setSearchResults] = useState([]);
-  const [playlistTracks, setPlaylistTracks] = useState([]);
-  const [playlistName, setPlaylistName] = useState("");
-  const [playlistId, setPlaylistId] = useState(null);
-  const [tempMessage, setTempMessage] = useState(null);
   const [playlists, setPlaylists] = useState([]);
   const [updatedPlaylist, setUpdatedPlaylist] = useState();
   const [updatedPlaylistName, setUpdatedPlaylistName] = useState();
+  const [tempMessage, setTempMessage] = useState(null);
 
-  const onUpdate = (updatedPlaylistTrack, updatedName) => {
-    setUpdatedPlaylistName(updatedName);
-    setUpdatedPlaylist(updatedPlaylistTrack);
-  };
+  const [token, setToken] = useState(
+    localStorage.getItem("spotify_access_token")
+  );
 
-  const showTempMessage = (msg, duration = 2000) => {
-    setTempMessage(msg);
-    setTimeout(() => {
-      setTempMessage(null);
-    }, duration);
-  };
+  // Listen for token changes when returning from callback
+  useEffect(() => {
+    const storedToken = localStorage.getItem("spotify_access_token");
+    if (storedToken !== token) {
+      setToken(storedToken);
+    }
+  }, [token]); // burayi sonradan ekldim
+
   useEffect(() => {
     const fetchUserPlaylists = async () => {
       try {
-        const playlists = await Spotify.getUserPlaylists();
-        setPlaylists(playlists);
+        const userPlaylists = await Spotify.getUserPlaylists();
+        setPlaylists(userPlaylists);
       } catch (err) {
-        setError("Failed to load playlists.");
+        setTempMessage("Failed to load playlists");
         console.error(err);
       }
     };
@@ -40,79 +53,91 @@ function Home() {
     fetchUserPlaylists();
   }, []);
 
-  function onSave(newItem) {
-    setPlaylists(newItem);
-  }
+  const showTempMessage = (msg, duration = 2000) => {
+    setTempMessage(msg);
+    setTimeout(() => setTempMessage(null), duration);
+  };
 
   const handleSearch = async (term) => {
     try {
       const results = await Spotify.search(term);
       setSearchResults(results);
-    } catch (error) {
+    } catch (err) {
       showTempMessage("Spotify search failed!");
-      console.error(error);
+      console.error(err);
     }
   };
 
-  const addTrackToPlaylist = (track) => {
-    // Avoid adding duplicate tracks
-    if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
-      showTempMessage("This track is already added.");
-    } else {
-      setPlaylistTracks((prev) => [...prev, track]);
-    }
+  // Update playlists after a new playlist is saved
+  const onSave = (newPlaylists) => {
+    setPlaylists(newPlaylists);
+    reset();
+    setSearchResults([]);
   };
 
-  const removeTrackFromPlaylist = (playlistTrack) => {
-    setPlaylistTracks((prev) =>
-      prev.filter((track) => track.id !== playlistTrack.id)
-    );
+  // This is called when a playlist is updated
+  const onUpdate = (updatedTracks, updatedName) => {
+    setUpdatedPlaylist(updatedTracks);
+    setUpdatedPlaylistName(updatedName);
+    setSearchResults([]);
   };
 
-  const resetAfterSave = () => {
-    setPlaylistTracks([]);
-    setPlaylistName("");
+  // Update state when editing is triggered from UserPlaylists
+  const onEdit = (name, tracks, id) => {
+    setPlaylistName(name);
+    setPlaylistId(id);
+    setPlaylistTracks(tracks);
   };
+  const logout = () => {
+    // 1. Token'ları temizle
+    localStorage.removeItem("spotify_access_token");
+    localStorage.removeItem("spotify_refresh_token");
 
-  const filteredSearchResults = searchResults.filter((searchTrack) => {
-    return !playlistTracks.some(
-      (playlistTrack) => playlistTrack.id === searchTrack.id
-    );
-  });
-  return (
+    // 3. Uygulama login sayfasına yönlendir
+    // (Bu, logout sayfasından geri dönünce yapılmalı)
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1500);
+  };
+  return token ? (
     <div className="app-layout">
+      <button onClick={logout}>Log out</button>
+
       <div className="search-wrapper">
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} setTempMessage={setTempMessage} />
       </div>
+
       <div className="bottom-row">
         <SearchResults
-          tracks={filteredSearchResults}
-          addTrackToPlaylist={addTrackToPlaylist}
+          tracks={searchResults.filter(
+            (track) => !playlistTracks.some((t) => t.id === track.id)
+          )}
+          addTrackToPlaylist={addTrack}
         />
+
         <NewPlaylist
           playlistTracks={playlistTracks}
-          removeTrackFromPlaylist={removeTrackFromPlaylist}
+          removeTrackFromPlaylist={removeTrack}
           playlistName={playlistName}
           setPlaylistName={setPlaylistName}
           tempMessage={tempMessage}
-          onReset={resetAfterSave}
+          onReset={reset}
           playlistId={playlistId}
-          //
           onSave={onSave}
           onUpdate={onUpdate}
         />
       </div>
+
       <UserPlaylists
         playlists={playlists}
         updatedPlaylist={updatedPlaylist}
         updatedPlaylistName={updatedPlaylistName}
-        onEdit={(name, tracks, id) => {
-          setPlaylistName(name);
-          setPlaylistTracks(tracks);
-          setPlaylistId(id);
-        }}
+        onEdit={onEdit}
+        setTempMessage={setTempMessage}
       />
     </div>
+  ) : (
+    <Login />
   );
 }
 

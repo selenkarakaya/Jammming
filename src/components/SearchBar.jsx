@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-function SearchBar({ onSearch }) {
+function SearchBar({ onSearch, setTempMessage }) {
   const [active, setActive] = useState(false);
   const [search, setSearch] = useState("");
   const inputRef = useRef(null);
@@ -17,13 +17,14 @@ function SearchBar({ onSearch }) {
 
     // If input is active but empty, prevent submission (required will show browser validation)
     if (active && search.trim() === "") {
-      // Optionally show a message here
+      setTempMessage("Please, write something");
       return;
     }
 
     // If input is active and has value, perform the search
     onSearch(search);
     setSearch("");
+    inputRef.current?.focus();
   };
 
   const handleChange = (e) => {
@@ -49,7 +50,7 @@ function SearchBar({ onSearch }) {
           ref={inputRef}
           value={search}
           onChange={handleChange}
-          required={active} // required only applies when input is visible
+          required
           aria-label="Search input"
         />
       )}

@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Spotify from "../utils/Spotify";
-import UserPlaylistTracks from "./UserPlaylistTracks";
-import { toast } from "react-toastify";
-import { CiEdit } from "react-icons/ci";
-import { RiEyeCloseFill } from "react-icons/ri";
+import React, { useState } from "react";
+import UserPlaylistModal from "./UserPlaylistModal";
 
 function UserPlaylists({
   playlists,
@@ -11,56 +7,13 @@ function UserPlaylists({
   updatedPlaylist,
   updatedPlaylistName,
 }) {
-  const [error, setError] = useState(null);
-  const [playlistName, setPlaylistName] = useState("");
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
-  const [tracks, setTracks] = useState([]);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    const fetchTracks = async () => {
-      if (!selectedPlaylistId) return;
-
-      if (updatedPlaylist && updatedPlaylistName) {
-        setTracks(updatedPlaylist);
-        setPlaylistName(updatedPlaylistName);
-        return; // ✅ API çağrısını atla çünkü güncel veri zaten geldi
-      }
-
-      try {
-        const tracks = await Spotify.getPlaylistTracks(selectedPlaylistId);
-        setTracks(tracks);
-        const playlist = playlists.find(
-          (p) => p.playlistId === selectedPlaylistId
-        );
-        if (playlist) setPlaylistName(playlist.name);
-      } catch (err) {
-        setError("Failed to load tracks.");
-        console.error(err);
-      }
-    };
-
-    fetchTracks();
-  }, [selectedPlaylistId, updatedPlaylist, updatedPlaylistName]);
-
-  const handleRemoveTrack = async (trackId) => {
-    try {
-      if (!selectedPlaylistId || !trackId) {
-        console.warn("Playlist ID or Track ID is missing.");
-        return;
-      }
-      await Spotify.removeTrackFromPlaylist(selectedPlaylistId, trackId);
-
-      const updatedTracks = await Spotify.getPlaylistTracks(selectedPlaylistId);
-      setTracks(updatedTracks);
-      toast.success("Song successfully removed from the playlist!");
-    } catch (error) {
-      console.error("An error occurred while deleting the song:", error);
-      toast.error("Please, try again!");
-    }
+  const handleSelect = (playlist) => {
+    setSelectedPlaylist(playlist);
+    setShowModal(true);
   };
-
-  if (error) return <div>{error}</div>;
 
   return (
     <div className="bg-white/5 rounded-xl shadow-md w-1/2 py-10 flex flex-col justify-center items-center">
@@ -72,79 +25,30 @@ function UserPlaylists({
         <p>No playlists found.</p>
       ) : (
         <ul>
-          {playlists.map((playlist) => (
+          {playlists.map((p) => (
             <li
-              key={playlist.playlistId}
-              style={{ cursor: "pointer" }}
-              className="text-lg p-2 hover:bg-black/10 hover:rounded-2xl hover:scale-110"
-              onClick={() => {
-                setSelectedPlaylistId(playlist.playlistId);
-                setPlaylistName(
-                  updatedPlaylist &&
-                    updatedPlaylistName &&
-                    playlist.playlistId === selectedPlaylistId
-                    ? updatedPlaylistName
-                    : playlist.name
-                );
-
-                setShowModal(true);
-              }}
+              key={p.playlistId}
+              onClick={() => handleSelect(p)}
+              className="text-lg p-2 hover:bg-black/10 hover:rounded-2xl hover:scale-110 cursor-pointer"
             >
               {updatedPlaylist &&
               updatedPlaylistName &&
-              playlist.playlistId === selectedPlaylistId
+              p.playlistId === selectedPlaylist?.playlistId
                 ? updatedPlaylistName
-                : playlist.name}
+                : p.name}
             </li>
           ))}
         </ul>
       )}
-      {showModal && (
-        <div
-          className="fixed top-0 left-0 w-full h-full flex justify-center items-center"
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className="bg-white p-5 rounded-lg w-3/4  max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-center font-extrabold text-cyan-900">
-              {playlistName}
-            </h3>
 
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => {
-                  onEdit(
-                    playlists.find((p) => p.playlistId === selectedPlaylistId)
-                      ?.name || "",
-                    tracks,
-                    selectedPlaylistId
-                  );
-                  setShowModal(false);
-                }}
-              >
-                <CiEdit className="text-2xl hover:scale-105 hover:text-cyan-900" />
-              </button>
-              <button onClick={() => setShowModal(false)}>
-                <RiEyeCloseFill className="text-2xl hover:scale-105 hover:text-red-800" />
-              </button>
-            </div>
-            {tracks.length === 0 ? (
-              <p>No tracks found.</p>
-            ) : (
-              <ul>
-                {tracks.map((track) => (
-                  <UserPlaylistTracks
-                    key={track.id}
-                    track={track}
-                    handleRemoveTrack={handleRemoveTrack}
-                  />
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+      {showModal && selectedPlaylist && (
+        <UserPlaylistModal
+          playlist={selectedPlaylist}
+          updatedPlaylist={updatedPlaylist}
+          updatedPlaylistName={updatedPlaylistName}
+          onClose={() => setShowModal(false)}
+          onEdit={onEdit}
+        />
       )}
     </div>
   );

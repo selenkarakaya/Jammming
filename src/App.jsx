@@ -14,27 +14,28 @@ import Home from "./components/Home";
 import "./App.css";
 
 function App() {
-  const [token, setToken] = useState(
-    localStorage.getItem("spotify_access_token")
-  );
+  // const [token, setToken] = useState(
+  //   localStorage.getItem("spotify_access_token")
+  // );
 
-  // Listen for token changes when returning from callback
-  useEffect(() => {
-    const storedToken = localStorage.getItem("spotify_access_token");
-    if (storedToken !== token) {
-      setToken(storedToken);
-    }
-  }, []);
+  // // Listen for token changes when returning from callback
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem("spotify_access_token");
+  //   if (storedToken !== token) {
+  //     setToken(storedToken);
+  //   }
+  // }, [token]); // burayi sonradan ekldim
 
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/callback" element={<Callback />} />
-        <Route
+        <Route path="/" element={<Home />} />
+        {/* <Route
           path="/"
           element={token ? <Home /> : <Navigate to="/login" replace />}
-        />
+        /> */}
       </Routes>
       <ToastContainer />
     </Router>
