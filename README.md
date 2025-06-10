@@ -40,23 +40,23 @@ The purpose of this project is to demonstrate knowledge and practical applicatio
 - 📄 **View Song Info**  
   View details such as song title, artist, and album cover.
 
+- 🎵 **Preview Tracks**
+  Each track includes a preview sample (redirects to Spotify for playback).
+
 - ➕ **Build a Playlist**  
   Add and remove tracks to create a custom playlist.
+
+- 🚫 **Duplicate-Free Search Results**
+  Only display songs not currently present in the playlist in the search results.
 
 - 🔐 **Spotify Authentication**  
   Secure login with Spotify via OAuth 2.0.
 
 - 🚀 **Save Playlist to Spotify**  
-  Save your custom playlist directly to your Spotify account.
+  Save your custom playlist directly to your Spotify account, with loading feedback during save.
 
----
-
-## 🚧 Future Improvements
-
-- 🎤 Add search filters for genres and popularity
-- 🎧 Preview audio snippets for each track
-- 📱 Improve mobile responsiveness and UI design
-- 🗃 Store previous playlists for later editing
+- 📁 **View & Edit Existing Playlists**
+  Users can view their existing playlists, rename them, add new tracks, or remove existing ones.
 
 ---
 
