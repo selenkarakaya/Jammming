@@ -12,6 +12,11 @@ function Home() {
   const [playlistId, setPlaylistId] = useState(null);
   const [tempMessage, setTempMessage] = useState(null);
   const [playlists, setPlaylists] = useState([]);
+  const [updatedPlaylist, setUpdatedPlaylist] = useState();
+
+  const onUpdate = (updatedPlaylistTrack) => {
+    setUpdatedPlaylist(updatedPlaylistTrack);
+  };
 
   const showTempMessage = (msg, duration = 2000) => {
     setTempMessage(msg);
@@ -86,10 +91,12 @@ function Home() {
           playlistId={playlistId}
           //
           onSave={onSave}
+          onUpdate={onUpdate}
         />
       </div>
       <UserPlaylists
         playlists={playlists}
+        updatedPlaylist={updatedPlaylist}
         onEdit={(name, tracks, id) => {
           setPlaylistName(name);
           setPlaylistTracks(tracks);

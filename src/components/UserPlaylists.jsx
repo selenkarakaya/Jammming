@@ -5,30 +5,19 @@ import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
 import { RiEyeCloseFill } from "react-icons/ri";
 
-function UserPlaylists({ playlists, onEdit }) {
+function UserPlaylists({ playlists, onEdit, updatedPlaylist }) {
   const [error, setError] = useState(null);
   const [playlistName, setPlaylistName] = useState(null);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [tracks, setTracks] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  // useEffect(() => {
-  //   const fetchUserPlaylists = async () => {
-  //     try {
-  //       const playlists = await Spotify.getUserPlaylists();
-  //       setPlaylists(playlists);
-  //     } catch (err) {
-  //       setError("Failed to load playlists.");
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   fetchUserPlaylists();
-  // }, []);
-
   useEffect(() => {
     const fetchTracks = async () => {
       if (!selectedPlaylistId) return;
+      if (updatedPlaylist) {
+        setTracks(updatedPlaylist);
+      }
       try {
         const tracks = await Spotify.getPlaylistTracks(selectedPlaylistId);
         setTracks(tracks);
@@ -39,7 +28,7 @@ function UserPlaylists({ playlists, onEdit }) {
     };
 
     fetchTracks();
-  }, [selectedPlaylistId]);
+  }, [selectedPlaylistId, updatedPlaylist]);
 
   const handleRemoveTrack = async (trackId) => {
     try {
@@ -92,7 +81,7 @@ function UserPlaylists({ playlists, onEdit }) {
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white p-5 rounded-lg w-3/4 overflow-y-auto"
+            className="bg-white p-5 rounded-lg w-3/4  max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-center font-extrabold text-cyan-900">

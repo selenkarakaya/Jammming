@@ -8,10 +8,11 @@ function SavePlaylistButton({
   onReset,
   playlistId,
   onSave,
+  onUpdate,
 }) {
   const [isSaving, setIsSaving] = useState(false);
-  // Ripple effect logic
   const [ripples, setRipples] = useState([]);
+
   const handleClick = (e) => {
     const button = e.currentTarget;
     const rect = button.getBoundingClientRect();
@@ -53,10 +54,24 @@ function SavePlaylistButton({
 
     try {
       await Spotify.savePlaylist(playlistName, trackUris, playlistId);
+
+      const updatedPlaylist = playlistId
+        ? await Spotify.getPlaylistTracks(playlistId) // sadece güncellenen playlist
+        : null;
+
       setIsSaving(false); // Stop loading when done
       toast.success(`"${playlistName}" has been saved to Spotify!`);
+
       onReset();
-      onSave(await Spotify.getUserPlaylists());
+      //onSave(await Spotify.getUserPlaylists());
+
+      if (playlistId && updatedPlaylist) {
+        // Eğer edit işlemi ise, güncellenmiş playlist'i üst component'e gönder
+        onUpdate(updatedPlaylist);
+      } else {
+        // Yeni playlist ise tüm listeleri güncelle
+        onSave(await Spotify.getUserPlaylists());
+      }
     } catch (error) {
       setIsSaving(false); // Stop loading on error
       console.error("Error saving playlist:", error);

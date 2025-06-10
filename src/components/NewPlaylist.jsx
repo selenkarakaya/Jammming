@@ -11,6 +11,7 @@ function NewPlaylist({
   onReset,
   playlistId,
   onSave,
+  onUpdate,
 }) {
   return (
     <section
@@ -62,6 +63,7 @@ function NewPlaylist({
         onReset={onReset}
         //
         onSave={onSave}
+        onUpdate={onUpdate}
       />
       {tempMessage && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
