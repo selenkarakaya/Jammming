@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../utils/Spotify";
 import UserPlaylistTracks from "./UserPlaylistTracks";
-function UserPlaylists() {
+import { toast } from "react-toastify";
+function UserPlaylists({ onEdit }) {
   const [playlists, setPlaylists] = useState([]);
   const [error, setError] = useState(null);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
@@ -36,6 +37,28 @@ function UserPlaylists() {
 
     fetchTracks();
   }, [selectedPlaylistId]);
+
+  const handleRemoveTrack = async (trackId) => {
+    try {
+      console.log("Silinecek track ID:", trackId);
+      console.log("Seçilen playlist ID:", selectedPlaylistId);
+
+      if (!selectedPlaylistId || !trackId) {
+        console.warn("Playlist ID veya Track ID eksik.");
+        return;
+      }
+
+      await Spotify.removeTrackFromPlaylist(selectedPlaylistId, trackId);
+
+      const updatedTracks = await Spotify.getPlaylistTracks(selectedPlaylistId);
+      setTracks(updatedTracks);
+
+      toast.success("Şarkı playlistten silindi!");
+    } catch (error) {
+      console.error("Şarkı silinirken hata oluştu:", error);
+      toast.error("Şarkı silinirken bir hata oluştu.");
+    }
+  };
 
   if (error) return <div>{error}</div>;
 
@@ -93,10 +116,29 @@ function UserPlaylists() {
             ) : (
               <ul>
                 {tracks.map((track) => (
-                  <UserPlaylistTracks key={track.id} track={track} />
+                  <UserPlaylistTracks
+                    key={track.id}
+                    track={track}
+                    handleRemoveTrack={handleRemoveTrack}
+                  />
                 ))}
               </ul>
             )}
+
+            <button
+              onClick={() => {
+                onEdit(
+                  playlists.find((p) => p.playlistId === selectedPlaylistId)
+                    ?.name || "",
+                  tracks,
+                  selectedPlaylistId
+                );
+                setShowModal(false);
+              }}
+            >
+              Edit
+            </button>
+
             <button onClick={() => setShowModal(false)}>Close</button>
           </div>
         </div>

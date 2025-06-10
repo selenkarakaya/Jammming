@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function UserPlaylistTracks({ track }) {
+function UserPlaylistTracks({ track, handleRemoveTrack }) {
   return (
     <li key={track.id} style={{ marginBottom: "15px" }}>
       <strong>{track.name}</strong> by {track.artist}
@@ -20,6 +20,7 @@ function UserPlaylistTracks({ track }) {
       >
         Open in Spotify
       </a>
+      <button onClick={() => handleRemoveTrack(track.id)}>Sil</button>
       <hr />
     </li>
   );
