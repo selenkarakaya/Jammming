@@ -13,13 +13,15 @@ import SearchResults from "./components/SearchResults";
 import NewPlaylist from "./components/NewPlaylist";
 import Callback from "./components/Callback";
 import Login from "./components/Login";
+import UserPlaylists from "./components/UserPlaylists";
 import "./App.css";
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [playlistName, setPlaylistName] = useState("");
+  const [playlistId, setPlaylistId] = useState(null);
   const [tempMessage, setTempMessage] = useState(null);
-
   const [token, setToken] = useState(
     localStorage.getItem("spotify_access_token")
   );
@@ -39,7 +41,7 @@ function App() {
     }, duration);
   };
 
-  async function handleSearch(term) {
+  const handleSearch = async (term) => {
     try {
       const results = await Spotify.search(term);
       setSearchResults(results);
@@ -47,7 +49,7 @@ function App() {
       showTempMessage("Spotify search failed!");
       console.error(error);
     }
-  }
+  };
 
   const addTrackToPlaylist = (track) => {
     // Avoid adding duplicate tracks
@@ -62,6 +64,11 @@ function App() {
     setPlaylistTracks((prev) =>
       prev.filter((track) => track.id !== playlistTrack.id)
     );
+  };
+
+  const resetAfterSave = () => {
+    setPlaylistTracks([]);
+    setPlaylistName("");
   };
 
   return (
@@ -82,10 +89,24 @@ function App() {
                     tracks={searchResults}
                     addTrackToPlaylist={addTrackToPlaylist}
                   />
+
                   <NewPlaylist
                     playlistTracks={playlistTracks}
                     removeTrackFromPlaylist={removeTrackFromPlaylist}
+                    playlistName={playlistName}
+                    setPlaylistName={setPlaylistName}
                     tempMessage={tempMessage}
+                    onReset={resetAfterSave}
+                    playlistId={playlistId}
+                  />
+                </div>
+                <div>
+                  <UserPlaylists
+                    onEdit={(name, tracks, id) => {
+                      setPlaylistName(name);
+                      setPlaylistTracks(tracks);
+                      setPlaylistId(id);
+                    }}
                   />
                 </div>
               </div>
