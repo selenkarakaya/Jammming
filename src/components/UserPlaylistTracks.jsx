@@ -4,38 +4,33 @@ import { AiOutlineSpotify } from "react-icons/ai";
 
 function UserPlaylistTracks({ track, handleRemoveTrack }) {
   return (
-    <li key={track.id} style={{ marginBottom: "15px" }}>
-      <strong>{track.name}</strong> by {track.artist}
-      <br />
-      <em>Album:</em> {track.album}
-      <br />
-      {track.preview_url && (
-        <audio controls src={track.preview_url}>
-          Your browser does not support the audio element.
-        </audio>
-      )}
-      <br />
-      <a
-        href={track.external_urls.spotify}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Open in Spotify
-      </a>
-      <a
-        href={track.external_urls?.spotify}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <AiOutlineSpotify className="text-2xl text-green-900" />
-      </a>
-      <button
-        onClick={() => handleRemoveTrack(track.id)}
-        aria-label={`Remove ${track.name} from playlist`}
-      >
-        <IoRemoveCircleOutline className="text-2xl" />
-      </button>
-      <hr />
+    <li
+      key={track.id}
+      className="flex my-3 justify-between items-center border-b-2 border-b-cyan-800"
+    >
+      <div className="flex flex-col mb-3">
+        <p>
+          <strong>{track.name}</strong> by {track.artist}
+        </p>
+        <p>
+          <em>Album:</em> {track.album}
+        </p>
+      </div>
+      <div className="flex gap-2">
+        <a
+          href={track.external_urls?.spotify}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <AiOutlineSpotify className="text-2xl hover:scale-105 text-green-900" />
+        </a>
+        <button
+          onClick={() => handleRemoveTrack(track.id)}
+          aria-label={`Remove ${track.name} from playlist`}
+        >
+          <IoRemoveCircleOutline className="text-2xl hover:scale-105 hover:text-red-800" />
+        </button>
+      </div>
     </li>
   );
 }

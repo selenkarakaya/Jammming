@@ -11,12 +11,31 @@ function Home() {
   const [playlistName, setPlaylistName] = useState("");
   const [playlistId, setPlaylistId] = useState(null);
   const [tempMessage, setTempMessage] = useState(null);
+  const [playlists, setPlaylists] = useState([]);
+
   const showTempMessage = (msg, duration = 2000) => {
     setTempMessage(msg);
     setTimeout(() => {
       setTempMessage(null);
     }, duration);
   };
+  useEffect(() => {
+    const fetchUserPlaylists = async () => {
+      try {
+        const playlists = await Spotify.getUserPlaylists();
+        setPlaylists(playlists);
+      } catch (err) {
+        setError("Failed to load playlists.");
+        console.error(err);
+      }
+    };
+
+    fetchUserPlaylists();
+  }, []);
+
+  function onSave(newItem) {
+    setPlaylists(newItem);
+  }
 
   const handleSearch = async (term) => {
     try {
@@ -57,7 +76,6 @@ function Home() {
           tracks={searchResults}
           addTrackToPlaylist={addTrackToPlaylist}
         />
-
         <NewPlaylist
           playlistTracks={playlistTracks}
           removeTrackFromPlaylist={removeTrackFromPlaylist}
@@ -66,17 +84,18 @@ function Home() {
           tempMessage={tempMessage}
           onReset={resetAfterSave}
           playlistId={playlistId}
+          //
+          onSave={onSave}
         />
       </div>
-      <div>
-        <UserPlaylists
-          onEdit={(name, tracks, id) => {
-            setPlaylistName(name);
-            setPlaylistTracks(tracks);
-            setPlaylistId(id);
-          }}
-        />
-      </div>
+      <UserPlaylists
+        playlists={playlists}
+        onEdit={(name, tracks, id) => {
+          setPlaylistName(name);
+          setPlaylistTracks(tracks);
+          setPlaylistId(id);
+        }}
+      />
     </div>
   );
 }

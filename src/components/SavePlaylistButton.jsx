@@ -7,12 +7,11 @@ function SavePlaylistButton({
   playlistName,
   onReset,
   playlistId,
+  onSave,
 }) {
+  const [isSaving, setIsSaving] = useState(false);
   // Ripple effect logic
   const [ripples, setRipples] = useState([]);
-
-  const [isSaving, setIsSaving] = useState(false);
-
   const handleClick = (e) => {
     const button = e.currentTarget;
     const rect = button.getBoundingClientRect();
@@ -57,6 +56,7 @@ function SavePlaylistButton({
       setIsSaving(false); // Stop loading when done
       toast.success(`"${playlistName}" has been saved to Spotify!`);
       onReset();
+      onSave(await Spotify.getUserPlaylists());
     } catch (error) {
       setIsSaving(false); // Stop loading on error
       console.error("Error saving playlist:", error);
