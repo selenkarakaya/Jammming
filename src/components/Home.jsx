@@ -73,6 +73,12 @@ function Home() {
     setPlaylistTracks([]);
     setPlaylistName("");
   };
+
+  const filteredSearchResults = searchResults.filter((searchTrack) => {
+    return !playlistTracks.some(
+      (playlistTrack) => playlistTrack.id === searchTrack.id
+    );
+  });
   return (
     <div className="app-layout">
       <div className="search-wrapper">
@@ -80,7 +86,7 @@ function Home() {
       </div>
       <div className="bottom-row">
         <SearchResults
-          tracks={searchResults}
+          tracks={filteredSearchResults}
           addTrackToPlaylist={addTrackToPlaylist}
         />
         <NewPlaylist
