@@ -1,25 +1,41 @@
-import { generateRandomString, sha256, base64UrlEncode } from "./spotifyAuth";
-import { toast } from "react-toastify";
+/**
+ * Spotify API Client - Jamming App
+ *
+ * This module contains all the core functions required to interact with the Spotify Web API.
+ * It uses PKCE (Proof Key for Code Exchange) OAuth 2.0 authorization method
+ * for user authentication, token management, searching tracks, and creating/updating playlists.
+ *
+ * @module Spotify
+ */
 
+import { generateRandomString, sha256, base64UrlEncode } from "./spotifyAuth";
+
+// Spotify application client ID (unique identifier for the app)
 const clientId = "21b64e14c1a9424d92b5cb31a803a393";
-// const redirectUri =
-//   window.location.hostname === "localhost"
-//     ? "http://127.0.0.1:5173/callback"
-//     : "https://spotifyapijamming.netlify.app/callback";
+// Requested scopes (permissions) from the user
 const scope = "playlist-modify-public playlist-modify-private";
+
+// Redirect URI where user is sent after authentication.
+// Dynamically determined based on environment (local or production).
 const redirectUri =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:5173/callback"
     : "https://spotifyapijamming.netlify.app/callback";
 
-let userId = null;
-
 const Spotify = {
+  /**
+   * Retrieves the access token from localStorage.
+   * @returns {string|null} Spotify access token
+   */
   getAccessToken() {
     return localStorage.getItem("spotify_access_token");
   },
 
+  /**
+   * Retrieves the refresh token from localStorage.
+   * @returns {string|null} Spotify refresh token
+   */
   getRefreshToken() {
     return localStorage.getItem("spotify_refresh_token");
   },
@@ -35,6 +51,10 @@ const Spotify = {
     localStorage.setItem("spotify_token_expiry", expiryTime);
   },
 
+  /*
+   * Redirects the user to Spotify's OAuth authorization page.
+   * Generates and stores a PKCE code_verifier and code_challenge for security.
+   */
   async redirectToSpotify() {
     const codeVerifier = generateRandomString(128);
     localStorage.setItem("code_verifier", codeVerifier);
@@ -50,7 +70,10 @@ const Spotify = {
 
     window.location = authUrl;
   },
-
+  /*
+   * Requests a new access token from Spotify using the refresh token.
+   * If the refresh token is missing or the request fails, tokens are cleared and the user is redirected to login.
+   */
   async refreshAccessToken() {
     const refresh_token = this.getRefreshToken();
     console.log("Using refresh_token:", refresh_token);
@@ -94,6 +117,10 @@ const Spotify = {
     }
   },
 
+  /*
+   * Ensures there is a valid access token.
+   * Refreshes the token if expired, or throws an error if no token is available.
+   */
   async ensureAccessToken() {
     const token = this.getAccessToken();
     const expiry = localStorage.getItem("spotify_token_expiry");
@@ -110,6 +137,12 @@ const Spotify = {
 
     return token;
   },
+
+  /*
+   * Searches Spotify for tracks matching the provided search term.
+   * @param {string} term Search query string
+   * @returns {Promise<Array>} Array of track objects matching the search
+   */
 
   async search(term) {
     const token = await this.ensureAccessToken();
@@ -136,6 +169,11 @@ const Spotify = {
     }));
   },
 
+  /**
+   * Retrieves the current authenticated user's Spotify ID.
+   * @returns {Promise<string>} Spotify user ID
+   */
+
   async getCurrentUserId() {
     try {
       const token = await this.ensureAccessToken();
@@ -158,26 +196,31 @@ const Spotify = {
     }
   },
 
+  /**
+   * Saves a playlist by either creating a new one or updating an existing one.
+   * If playlistId is provided, it updates the playlist name and replaces tracks.
+   * Otherwise, it creates a new playlist and adds tracks.
+   * @param {string} name Playlist name
+   * @param {Array<string>} trackUris Array of Spotify track URIs
+   * @param {string} [playlistId] Optional playlist ID to update
+   */
+
   async savePlaylist(name, trackUris, playlistId) {
     if (!name || !trackUris.length) return;
-    console.log(name);
+
     const token = await this.ensureAccessToken();
     const headers = { Authorization: `Bearer ${token}` };
-
-    // Get the user ID
     const userId = await this.getCurrentUserId();
 
+    // Update existing playlist name and tracks
     if (playlistId) {
-      // ✅ Update existing playlist name and replace tracks
       try {
-        // 1. Update playlist name
         await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
           method: "PUT",
           headers: headers,
           body: JSON.stringify({ name }),
         });
 
-        // 2. Replace playlist items
         await fetch(
           `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
           {
@@ -190,7 +233,7 @@ const Spotify = {
         console.error("Failed to update existing playlist", err);
       }
     } else {
-      // ✅ Create new playlist
+      // Create a new playlist and add tracks
       try {
         const createPlaylistResponse = await fetch(
           `https://api.spotify.com/v1/users/${userId}/playlists`,
@@ -216,6 +259,11 @@ const Spotify = {
       }
     }
   },
+
+  /**
+   * Retrieves all playlists of the current user.
+   * @returns {Promise<Array>} Array of playlist objects with playlistId and name
+   */
 
   async getUserPlaylists() {
     try {
@@ -245,6 +293,12 @@ const Spotify = {
       return []; // Return an empty array in case of an error
     }
   },
+
+  /**
+   * Retrieves specified playlist of the current user.
+   * @param {string} playlistId :  playlist ID
+   * @returns {Promise<Array>} Tracks in specified playlist
+   */
   async getPlaylistTracks(playlistId) {
     try {
       const token = await this.ensureAccessToken();
@@ -273,9 +327,16 @@ const Spotify = {
     }
   },
 
+  /**
+   * Removes a track from the specified playlist.
+   * @param {string} playlistId The ID of the playlist
+   * @param {string} trackId The ID of the track to be removed
+   */
+
   async removeTrackFromPlaylist(playlistId, trackId) {
-    const token = await this.ensureAccessToken();
     try {
+      const token = await this.ensureAccessToken();
+
       const response = await fetch(
         `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
         {
@@ -291,12 +352,12 @@ const Spotify = {
       );
 
       if (!response.ok) {
-        throw new Error(`Şarkı silinirken hata oluştu: ${response.statusText}`);
+        throw new Error(`Failed to remove track: ${response.statusText}`);
       }
 
-      console.log("Şarkı playlistten başarıyla silindi.");
+      console.log("Track successfully removed from playlist.");
     } catch (error) {
-      console.error(error);
+      console.error("Error removing track from playlist:", error);
     }
   },
 };
