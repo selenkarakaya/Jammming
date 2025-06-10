@@ -5,9 +5,14 @@ import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
 import { RiEyeCloseFill } from "react-icons/ri";
 
-function UserPlaylists({ playlists, onEdit, updatedPlaylist }) {
+function UserPlaylists({
+  playlists,
+  onEdit,
+  updatedPlaylist,
+  updatedPlaylistName,
+}) {
   const [error, setError] = useState(null);
-  const [playlistName, setPlaylistName] = useState(null);
+  const [playlistName, setPlaylistName] = useState("");
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [tracks, setTracks] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -15,12 +20,20 @@ function UserPlaylists({ playlists, onEdit, updatedPlaylist }) {
   useEffect(() => {
     const fetchTracks = async () => {
       if (!selectedPlaylistId) return;
-      if (updatedPlaylist) {
+
+      if (updatedPlaylist && updatedPlaylistName) {
         setTracks(updatedPlaylist);
+        setPlaylistName(updatedPlaylistName);
+        return; // ✅ API çağrısını atla çünkü güncel veri zaten geldi
       }
+
       try {
         const tracks = await Spotify.getPlaylistTracks(selectedPlaylistId);
         setTracks(tracks);
+        const playlist = playlists.find(
+          (p) => p.playlistId === selectedPlaylistId
+        );
+        if (playlist) setPlaylistName(playlist.name);
       } catch (err) {
         setError("Failed to load tracks.");
         console.error(err);
@@ -28,7 +41,7 @@ function UserPlaylists({ playlists, onEdit, updatedPlaylist }) {
     };
 
     fetchTracks();
-  }, [selectedPlaylistId, updatedPlaylist]);
+  }, [selectedPlaylistId, updatedPlaylist, updatedPlaylistName]);
 
   const handleRemoveTrack = async (trackId) => {
     try {
@@ -65,12 +78,23 @@ function UserPlaylists({ playlists, onEdit, updatedPlaylist }) {
               style={{ cursor: "pointer" }}
               className="text-lg p-2 hover:bg-black/10 hover:rounded-2xl hover:scale-110"
               onClick={() => {
-                setPlaylistName(playlist.name);
                 setSelectedPlaylistId(playlist.playlistId);
+                setPlaylistName(
+                  updatedPlaylist &&
+                    updatedPlaylistName &&
+                    playlist.playlistId === selectedPlaylistId
+                    ? updatedPlaylistName
+                    : playlist.name
+                );
+
                 setShowModal(true);
               }}
             >
-              {playlist.name}
+              {updatedPlaylist &&
+              updatedPlaylistName &&
+              playlist.playlistId === selectedPlaylistId
+                ? updatedPlaylistName
+                : playlist.name}
             </li>
           ))}
         </ul>
@@ -126,7 +150,6 @@ function UserPlaylists({ playlists, onEdit, updatedPlaylist }) {
   );
 }
 
-//   ))}
 export default UserPlaylists;
 
 /*

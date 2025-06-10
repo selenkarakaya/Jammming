@@ -63,13 +63,11 @@ function SavePlaylistButton({
       toast.success(`"${playlistName}" has been saved to Spotify!`);
 
       onReset();
-      //onSave(await Spotify.getUserPlaylists());
+      onSave(await Spotify.getUserPlaylists());
 
       if (playlistId && updatedPlaylist) {
-        // Eğer edit işlemi ise, güncellenmiş playlist'i üst component'e gönder
-        onUpdate(updatedPlaylist);
+        onUpdate(updatedPlaylist, playlistName);
       } else {
-        // Yeni playlist ise tüm listeleri güncelle
         onSave(await Spotify.getUserPlaylists());
       }
     } catch (error) {

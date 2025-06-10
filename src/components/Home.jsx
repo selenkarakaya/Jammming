@@ -13,8 +13,10 @@ function Home() {
   const [tempMessage, setTempMessage] = useState(null);
   const [playlists, setPlaylists] = useState([]);
   const [updatedPlaylist, setUpdatedPlaylist] = useState();
+  const [updatedPlaylistName, setUpdatedPlaylistName] = useState();
 
-  const onUpdate = (updatedPlaylistTrack) => {
+  const onUpdate = (updatedPlaylistTrack, updatedName) => {
+    setUpdatedPlaylistName(updatedName);
     setUpdatedPlaylist(updatedPlaylistTrack);
   };
 
@@ -97,6 +99,7 @@ function Home() {
       <UserPlaylists
         playlists={playlists}
         updatedPlaylist={updatedPlaylist}
+        updatedPlaylistName={updatedPlaylistName}
         onEdit={(name, tracks, id) => {
           setPlaylistName(name);
           setPlaylistTracks(tracks);
