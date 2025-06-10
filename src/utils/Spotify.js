@@ -158,39 +158,63 @@ const Spotify = {
     }
   },
 
-  async savePlaylist(name, trackUris) {
+  async savePlaylist(name, trackUris, playlistId) {
     if (!name || !trackUris.length) return;
-
+    console.log(name);
     const token = await this.ensureAccessToken();
     const headers = { Authorization: `Bearer ${token}` };
 
     // Get the user ID
     const userId = await this.getCurrentUserId();
 
-    // Create a new playlist
-    const playlistResponse = await fetch(
-      `https://api.spotify.com/v1/users/${userId}/playlists`,
-      {
-        method: "POST",
-        headers: {
-          ...headers,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name }),
-      }
-    );
-    const playlistData = await playlistResponse.json();
-    const playlistId = playlistData.id;
+    if (playlistId) {
+      // ✅ Update existing playlist name and replace tracks
+      try {
+        // 1. Update playlist name
+        await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+          method: "PUT",
+          headers: headers,
+          body: JSON.stringify({ name }),
+        });
 
-    // Add tracks to the playlist
-    await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-      method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ uris: trackUris }),
-    });
+        // 2. Replace playlist items
+        await fetch(
+          `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+          {
+            method: "PUT",
+            headers: headers,
+            body: JSON.stringify({ uris: trackUris }),
+          }
+        );
+      } catch (err) {
+        console.error("Failed to update existing playlist", err);
+      }
+    } else {
+      // ✅ Create new playlist
+      try {
+        const createPlaylistResponse = await fetch(
+          `https://api.spotify.com/v1/users/${userId}/playlists`,
+          {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({ name }),
+          }
+        );
+
+        const playlistData = await createPlaylistResponse.json();
+
+        await fetch(
+          `https://api.spotify.com/v1/playlists/${playlistData.id}/tracks`,
+          {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({ uris: trackUris }),
+          }
+        );
+      } catch (err) {
+        console.error("Failed to create new playlist", err);
+      }
+    }
   },
 
   async getUserPlaylists() {
