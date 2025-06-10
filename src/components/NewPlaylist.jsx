@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NewPlaylistTrack from "./NewPlaylistTrack";
 import SavePlaylistButton from "./SavePlaylistButton";
-import UserPlaylists from "./UserPlaylists";
 
-function NewPlaylist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
-  const [playlistName, setPlaylistName] = useState("");
-
+function NewPlaylist({
+  playlistTracks,
+  removeTrackFromPlaylist,
+  playlistName,
+  setPlaylistName,
+  tempMessage,
+  onReset,
+  playlistId,
+}) {
   return (
     <section
       className="bg-black/10 p-4 rounded-xl shadow-md"
@@ -52,8 +57,9 @@ function NewPlaylist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
       <SavePlaylistButton
         playlistTracks={playlistTracks}
         playlistName={playlistName}
+        playlistId={playlistId}
+        onReset={onReset}
       />
-
       {tempMessage && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
           <div className="bg-black/80 text-white px-6 py-3 rounded-xl shadow-lg text-lg animate-fadeInOut">
@@ -61,8 +67,6 @@ function NewPlaylist({ playlistTracks, removeTrackFromPlaylist, tempMessage }) {
           </div>
         </div>
       )}
-
-      <UserPlaylists />
     </section>
   );
 }
