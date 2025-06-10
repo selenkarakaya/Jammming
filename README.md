@@ -78,12 +78,12 @@ The purpose of this project is to demonstrate knowledge and practical applicatio
 
 ## 📊 Lighthouse Score
 
-| Category       | Score                                                                  |
-| -------------- | ---------------------------------------------------------------------- |
-| Performance    | ![98](https://img.shields.io/badge/Performance-98%25-brightgreen)      |
-| Accessibility  | ![100](https://img.shields.io/badge/Accessibility-100%25-brightgreen)  |
-| Best Practices | ![100](https://img.shields.io/badge/Best_Practices-100%25-brightgreen) |
-| SEO            | ![90](https://img.shields.io/badge/SEO-90%25-yellow)                   |
+| Category       | Score                                                                 |
+| -------------- | --------------------------------------------------------------------- |
+| Performance    | ![98](https://img.shields.io/badge/Performance-98%25-brightgreen)     |
+| Accessibility  | ![100](https://img.shields.io/badge/Accessibility-100%25-brightgreen) |
+| Best Practices | ![96](https://img.shields.io/badge/Best_Practices-100%25-brightgreen) |
+| SEO            | ![91](https://img.shields.io/badge/SEO-90%25-yellow)                  |
 
 ### 👤 Author
 
