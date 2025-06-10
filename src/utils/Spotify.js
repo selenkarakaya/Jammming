@@ -272,6 +272,33 @@ const Spotify = {
       return [];
     }
   },
+
+  async removeTrackFromPlaylist(playlistId, trackId) {
+    const token = await this.ensureAccessToken();
+    try {
+      const response = await fetch(
+        `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tracks: [{ uri: `spotify:track:${trackId}` }],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Şarkı silinirken hata oluştu: ${response.statusText}`);
+      }
+
+      console.log("Şarkı playlistten başarıyla silindi.");
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };
 
 export default Spotify;
