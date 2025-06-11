@@ -1,4 +1,5 @@
 # 🎵 Jamming
+
 ![Coverage](https://img.shields.io/codecov/c/github/selenkarakaya/jamming?style=flat-square)
 
 Jammming is a React web application that allows users to search songs via the Spotify API, create a custom playlist, and export it directly to their Spotify account.
