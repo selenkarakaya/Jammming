@@ -20,7 +20,7 @@ export async function savePlaylistToSpotify({
 
   if (playlistId) {
     const updated = await Spotify.getPlaylistTracks(playlistId);
-    onUpdate?.(updated, name);
+    onUpdate?.(updated, name, playlistId);
   } else {
     const newPlaylists = await Spotify.getUserPlaylists();
     onSave?.(newPlaylists);
