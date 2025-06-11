@@ -6,6 +6,7 @@ function UserPlaylists({
   onEdit,
   updatedPlaylist,
   updatedPlaylistName,
+  updatedPlaylistId,
 }) {
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -14,6 +15,15 @@ function UserPlaylists({
     setSelectedPlaylist(playlist);
     setShowModal(true);
   };
+  const isUpdatedPlaylist = selectedPlaylist?.playlistId === updatedPlaylistId;
+
+  const modalPlaylist = isUpdatedPlaylist
+    ? {
+        ...selectedPlaylist,
+        tracks: updatedPlaylist,
+        name: updatedPlaylistName,
+      }
+    : selectedPlaylist;
 
   return (
     <div className="bg-white/5 rounded-xl shadow-md w-1/2 py-10 flex flex-col justify-center items-center">
@@ -43,7 +53,7 @@ function UserPlaylists({
 
       {showModal && selectedPlaylist && (
         <UserPlaylistModal
-          playlist={selectedPlaylist}
+          playlist={modalPlaylist}
           updatedPlaylist={updatedPlaylist}
           updatedPlaylistName={updatedPlaylistName}
           onClose={() => setShowModal(false)}

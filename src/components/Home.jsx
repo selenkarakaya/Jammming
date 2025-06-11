@@ -25,6 +25,7 @@ function Home() {
   const [playlists, setPlaylists] = useState([]);
   const [updatedPlaylist, setUpdatedPlaylist] = useState();
   const [updatedPlaylistName, setUpdatedPlaylistName] = useState();
+  const [updatedPlaylistId, setUpdatedPlaylistId] = useState(null);
   const [tempMessage, setTempMessage] = useState(null);
 
   const [token, setToken] = useState(
@@ -76,9 +77,16 @@ function Home() {
   };
 
   // This is called when a playlist is updated
-  const onUpdate = (updatedTracks, updatedName) => {
+  const onUpdate = (updatedTracks, updatedName, updatedId) => {
     setUpdatedPlaylist(updatedTracks);
     setUpdatedPlaylistName(updatedName);
+    setUpdatedPlaylistId(updatedId);
+
+    setTimeout(() => {
+      setUpdatedPlaylistId(null);
+      setUpdatedPlaylist(null);
+      setUpdatedPlaylistName(null);
+    }, 2000);
     setSearchResults([]);
   };
 
@@ -132,6 +140,7 @@ function Home() {
         playlists={playlists}
         updatedPlaylist={updatedPlaylist}
         updatedPlaylistName={updatedPlaylistName}
+        updatedPlaylistId={updatedPlaylistId}
         onEdit={onEdit}
         setTempMessage={setTempMessage}
       />
