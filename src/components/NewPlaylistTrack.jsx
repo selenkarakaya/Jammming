@@ -12,7 +12,7 @@ function NewPlaylistTrack({ playlistTrack, onRemove }) {
       </div>
       <button
         onClick={() => {
-          onRemove(playlistTrack);
+          onRemove(playlistTrack.id);
         }}
         aria-label={`Remove ${playlistTrack.name} from playlist`}
         className="text-2xl"
