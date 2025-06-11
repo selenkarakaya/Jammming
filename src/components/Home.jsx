@@ -96,21 +96,9 @@ function Home() {
     setPlaylistId(id);
     setPlaylistTracks(tracks);
   };
-  const logout = () => {
-    // 1. Token'ları temizle
-    localStorage.removeItem("spotify_access_token");
-    localStorage.removeItem("spotify_refresh_token");
 
-    // 3. Uygulama login sayfasına yönlendir
-    // (Bu, logout sayfasından geri dönünce yapılmalı)
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1500);
-  };
   return token ? (
     <div className="app-layout">
-      <button onClick={logout}>Log out</button>
-
       <div className="search-wrapper">
         <SearchBar onSearch={handleSearch} setTempMessage={setTempMessage} />
       </div>

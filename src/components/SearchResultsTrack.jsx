@@ -17,7 +17,11 @@ function SearchResultsTrack({ track, addTrackToPlaylist }) {
       </div>
       <div className="flex gap-2 ">
         {track.preview_url ? (
-          <audio controls src={track.preview_url}></audio>
+          <audio
+            data-testid="audio-player"
+            controls
+            src={track.preview_url}
+          ></audio>
         ) : (
           <a
             href={track.external_urls?.spotify || "#"}

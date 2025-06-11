@@ -52,6 +52,8 @@ function UserPlaylistModal({
     <div
       className="fixed top-0 left-0 w-full h-full flex justify-center items-center"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
     >
       <div
         className="bg-white p-5 rounded-lg w-3/4 max-h-[80vh] overflow-y-auto"
@@ -64,6 +66,7 @@ function UserPlaylistModal({
               onEdit(name, tracks, playlistId);
               onClose();
             }}
+            aria-label="edit playlist"
           >
             <CiEdit className="text-2xl hover:scale-105 hover:text-cyan-900" />
           </button>

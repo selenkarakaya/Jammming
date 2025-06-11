@@ -8,10 +8,19 @@ function usePlaylistManager() {
   const [playlistId, setPlaylistId] = useState(null);
 
   // Adds a new track to the playlist but prevents adding the same track twice.
+  // const addTrack = (track) => {
+  //   if (!playlistTracks.some((t) => t.id === track.id)) {
+  //     setPlaylistTracks((prev) => [...prev, track]);
+  //   }
+  // };
+
   const addTrack = (track) => {
-    if (!playlistTracks.some((t) => t.id === track.id)) {
-      setPlaylistTracks((prev) => [...prev, track]);
-    }
+    setPlaylistTracks((prev) => {
+      if (!prev.some((t) => t.id === track.id)) {
+        return [...prev, track];
+      }
+      return prev;
+    });
   };
 
   // Used to remove a track from the playlist that the user is currently creating or editing.

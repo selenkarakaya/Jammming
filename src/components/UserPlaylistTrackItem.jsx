@@ -18,10 +18,11 @@ function UserPlaylistTrackItem({ track, onRemove }) {
           href={track.external_urls?.spotify}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Open in Spotify"
         >
           <AiOutlineSpotify className="text-2xl hover:scale-105 text-green-900" />
         </a>
-        <button onClick={onRemove}>
+        <button onClick={onRemove} aria-label={`Remove ${track.name}`}>
           <IoRemoveCircleOutline className="text-2xl hover:scale-105 hover:text-red-800" />
         </button>
       </div>
