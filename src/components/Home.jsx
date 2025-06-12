@@ -130,7 +130,6 @@ function Home() {
         updatedPlaylistName={updatedPlaylistName}
         updatedPlaylistId={updatedPlaylistId}
         onEdit={onEdit}
-        setTempMessage={setTempMessage}
       />
     </div>
   ) : (
