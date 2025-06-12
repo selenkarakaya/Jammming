@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import SearchResultsTrack from "../components/SearchResultsTrack";
-import "@testing-library/jest-dom"; // Geçici çözüm; globalde tanıtılmalı
+import "@testing-library/jest-dom";
 
 describe("SearchResultsTrack Component", () => {
   const sampleTrackWithPreview = {

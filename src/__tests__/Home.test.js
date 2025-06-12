@@ -106,10 +106,8 @@ describe("Home component", () => {
 
     render(<Home />);
 
-    // Butona tıkla, onSearch tetiklenecek ve handleSearch çalışacak
     fireEvent.click(screen.getByTestId("search-button"));
 
-    // Spotify.search çağrıldı mı?
     await waitFor(() => {
       expect(Spotify.search).toHaveBeenCalledWith("beatles");
     });
@@ -138,14 +136,10 @@ describe("Home component", () => {
 
     render(<Home />);
 
-    // Başta 'Mocked UserPlaylists' var mı?
     expect(screen.getByText("Mocked UserPlaylists")).toBeInTheDocument();
 
-    // Save butonuna tıkla, onSave tetiklenecek
     fireEvent.click(screen.getByTestId("save-button"));
 
-    // Yeni playlist'in eklenmiş olduğunu kontrol edelim
-    // Çünkü UserPlaylists props olarak playlistleri alıyor
     await waitFor(() => {
       expect(screen.getByTestId("playlist-count").textContent).toBe("1");
     });

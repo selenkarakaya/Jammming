@@ -9,14 +9,11 @@ describe("SearchBar component", () => {
       <SearchBar onSearch={() => {}} setTempMessage={() => {}} />
     );
 
-    // Başta input yok
     expect(queryByPlaceholderText("Search...")).toBeNull();
 
-    // Butona tıkla
     const button = getByRole("button", { name: /submit search/i });
     fireEvent.click(button);
 
-    // Input görünür olmalı
     const input = queryByPlaceholderText("Search...");
     expect(input).toBeInTheDocument();
   });
@@ -42,12 +39,11 @@ describe("SearchBar component", () => {
     render(<SearchBar onSearch={onSearch} setTempMessage={jest.fn()} />);
     const button = screen.getByRole("button");
 
-    // İlk tıklamada input açılır
     fireEvent.click(button);
     const input = screen.getByPlaceholderText(/search/i);
 
     fireEvent.change(input, { target: { value: "Eminem" } });
-    fireEvent.click(button); // ikinci tıklama: submit
+    fireEvent.click(button);
 
     expect(onSearch).toHaveBeenCalledWith("Eminem");
   });

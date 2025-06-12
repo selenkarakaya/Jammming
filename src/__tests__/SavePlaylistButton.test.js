@@ -67,7 +67,6 @@ describe("SavePlaylistButton", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /save to spotify/i }));
 
-    // Hata işleme tamamlanana kadar bekle
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledWith(expect.any(Error));
     });

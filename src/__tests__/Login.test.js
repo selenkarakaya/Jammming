@@ -4,12 +4,10 @@ import Login from "../components/Login";
 import "@testing-library/jest-dom";
 import { toast } from "react-toastify";
 
-// Spotify modülünü mock'la
 jest.mock("../utils/Spotify", () => ({
   redirectToSpotify: jest.fn(),
 }));
 
-// toast'ı spy'la
 jest.mock("react-toastify", () => ({
   toast: {
     info: jest.fn(),

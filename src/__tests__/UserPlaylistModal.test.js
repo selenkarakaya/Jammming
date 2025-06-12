@@ -37,14 +37,11 @@ test("renders UserPlaylistModal with tracks", async () => {
     />
   );
 
-  // Başlık doğru mu?
   expect(screen.getByText("Updated Name")).toBeInTheDocument();
 
-  // Şarkılar render edildi mi?
   expect(await screen.findByText("Track One")).toBeInTheDocument();
   expect(await screen.findByText("Track Two")).toBeInTheDocument();
 
-  // Dialog render oldu mu?
   expect(screen.getByRole("dialog")).toBeInTheDocument();
 });
 
