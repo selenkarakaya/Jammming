@@ -1,18 +1,12 @@
 # 🎵 Jamming
 
-Jammming is a React web application that allows users to search songs via the Spotify API, create a custom playlist, and export it directly to their Spotify account.
-
-## 🔗 Live Demo
-
-[Jammming Live Demo](https://spotifyapijamming.netlify.app)
-
-<p align="center">
+<p align="end">
   <img src="https://codecov.io/gh/selenkarakaya/jamming/branch/main/graph/badge.svg" alt="Coverage Badge" width="150" />
 </p>
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <h1 style="margin: 0 auto;">🎵 Jamming</h1>
-  <img src="https://codecov.io/gh/selenkarakaya/jamming/branch/main/graph/badge.svg" alt="Coverage Badge" width="150" />
-</div>
+
+Jammming is a React web application that allows users to search songs via the Spotify API, create a custom playlist, and export it directly to their Spotify account.
+
+🔗 [Jammming Live Demo](https://spotifyapijamming.netlify.app)
 
 ---
 
